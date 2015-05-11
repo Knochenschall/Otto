@@ -11,12 +11,18 @@ biscuit® machine. It was my hack at the [MidiHack#2](http://www.midihack.com) in
 
 ## Installation
 
+##### Binaries
+
+Grab on of the binaries (both Windows 32/64 and Mac available) from the relases section and drop it where your DAW will look for it. 
+
+##### From source code
 
  * Download or clone the [WDL-OL framework](https://github.com/olilarkin/wdl-ol);
  * use the duplicate.py script to create your own project: for example
    `duplicate IPlugText Otto yourname`;
  * replace Otto.h, Otto.cpp, resource.h and Otto.rc with the files in this repository;
  * place the images in resources/img
+ * on Xcode you'll need to add the images in the Resource folder and tick the
    Target Mebership boxes you want to build for.  
 
 ## License 
