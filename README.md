@@ -17,13 +17,13 @@ biscuit® machine. It was my hack at the [MidiHack#2](http://www.midihack.com) in
    `duplicate IPlugText Otto yourname`;
  * replace Otto.h, Otto.cpp, resource.h and Otto.rc with the files in this repository;
  * place the images in resources/img
+   Target Mebership boxes you want to build for.  
 
 ## License 
 
 
-Otto shares the same license as WDL / IPlug - Oli Larkin Edition
-It has been started from the IPlugText example 
-All the new code is Copyright (C) 2015  Fiore Martin
+Otto shares the same license as WDL / IPlug - Oli Larkin Edition.
+It has been started from the IPlugText example. All the new code is Copyright (C) 2015  Fiore Martin.
 
 
 -------------------------------------------
