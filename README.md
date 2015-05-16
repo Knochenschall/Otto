@@ -13,7 +13,7 @@ biscuit® machine. It was my hack at the [MidiHack#2](http://www.midihack.com) in
 
 ##### Binaries
 
-Grab on of the binaries (both Windows 32/64 and Mac available) from the relases section and drop it where your DAW will look for it. 
+Grab one of the binaries (both Windows 32/64 and Mac available) from the [relases section](https://github.com/martinfm/Otto/releases) and drop it where your DAW will look for it. 
 
 ##### From source code
 
