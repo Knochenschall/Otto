@@ -1,11 +1,12 @@
 # Otto
 
 Otto is a VST Plugin for pure digital crunchy distortion. 
-It's an 8 bit crusher where you can mute or invert each bit with 8 separate
-buttons. It also sports separate knobs for dry and wet and a downsampling control knob. 
+It's an 8 bit crusher where you can mute or invert each bit with 8 separate buttons. The buttons 
+can be switched through the three states in either direction using respectively left or right click. 
+It also sports separate knobs for dry and wet and a downsampling control knob. 
 
 It is based on [this brilliant video](https://www.youtube.com/watch?v=ohYQe5kzZg8) and it's a tribute to the OTO
-biscuit® machine. It was my hack at the [MidiHack#2](http://www.midihack.com) in Berlin. 
+biscuitÂ® machine. It was my hack at the [MidiHack#2](http://www.midihack.com) in Berlin. 
 
 ![Otto demo](https://martinfm.files.wordpress.com/2015/05/ottodemo.jpg)
 
