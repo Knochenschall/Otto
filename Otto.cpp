@@ -4,6 +4,7 @@
 #include "resource.h"
 #include "IBitmapMonoText.h"
 
+
 const int kNumPrograms = 1;
 
 template <typename T> int sgn(T val) {
@@ -49,13 +50,55 @@ enum ELayout
 	kKnobFrames = 64
 };
 
-enum eBitState
+enum EBitState
 {
 	kBitOn = 0,
 	kBitInv = 1,
-	kBitOff = 2
+	kBitOff = 2,
 	
+	kNumBitStates = 3
 };
+
+
+/*
+A switch control that goes backwards with a right click
+This allows to switch from one state to either other state with just one click.
+
+*/
+class OttoButtonControl : public ISwitchControl {
+	IMouseMod lastMouseMode;
+public:
+	OttoButtonControl(IPlugBase* pPlug, int x, int y, int paramIdx, IBitmap* pBitmap)
+		: ISwitchControl(pPlug, x, y, paramIdx, pBitmap) {}
+
+	~OttoButtonControl() {}
+
+	void OnMouseDown(int x, int y, IMouseMod* pMod){
+		lastMouseMode = pMod;
+
+		if (pMod->L){
+			ISwitchControl::OnMouseDown(x, y, pMod);
+		}
+		else if (pMod->R){
+
+			if (mBitmap.N > 1){
+				mValue -= 1.0 / (double)(mBitmap.N - 1);
+			}
+			else{
+				mValue -= 1.0;
+			}
+
+			if (mValue < 0.0){
+				mValue = 1.0;
+			}
+
+			SetDirty();
+		}
+	}
+};
+
+
+
 Otto::Otto(IPlugInstanceInfo instanceInfo)
 	: IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo), mDownsample(1), mCurrentSample(0), mDry(1.0), mWet(0.0)
 {
@@ -71,7 +114,7 @@ Otto::Otto(IPlugInstanceInfo instanceInfo)
 		/* init the IParam for the buttons */
 		char ButtonLabel[9];
 		sprintf(ButtonLabel, "Button %d", i+1);
-		GetParam(i)->InitEnum(ButtonLabel, 0, 3);
+		GetParam(i)->InitEnum(ButtonLabel, 0, kNumBitStates);
 		GetParam(i)->SetDisplayText(kBitOn, "On");
 		GetParam(i)->SetDisplayText(kBitInv, "Inv");
 		GetParam(i)->SetDisplayText(kBitOff, "Off"); 
@@ -90,10 +133,10 @@ Otto::Otto(IPlugInstanceInfo instanceInfo)
 	IText text(12, &COLOR_WHITE, "Courier", IText::kStyleNormal, IText::kAlignCenter, 0, IText::kQualityDefault);
 	
 
-	IBitmap bitmap = pGraphics->LoadIBitmap(BUTTON_ID, BUTTON_FN, 3);
+	IBitmap bitmap = pGraphics->LoadIBitmap(BUTTON_ID, BUTTON_FN, kNumBitStates);
 
 	for (int i = 0; i < kNumBits; i++){  // ranges from kButton1 to kButton8
-		pGraphics->AttachControl(new ISwitchControl(this, kButtonsContainerX + (i * kButtonWidth), kButtonsContainerY, i, &bitmap));
+		pGraphics->AttachControl(new OttoButtonControl(this, kButtonsContainerX + (i * kButtonWidth), kButtonsContainerY, i, &bitmap));
 	}
 	
 	IBitmap knob = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
@@ -110,7 +153,6 @@ Otto::Otto(IPlugInstanceInfo instanceInfo)
 	pGraphics->AttachControl(new IKnobMultiControl(this, kWetX, kWetY, kWet, &knob));
 	IRECT wetLabelRect(kWetX, kWetY + 40, kWetX + 45, kWetY + 40 + 20); //  // left, top, right, bottom
 	pGraphics->AttachControl(new ITextControl(this, wetLabelRect, &text, "Wet"));
-
 
 	AttachGraphics(pGraphics);
 	//MakePreset("preset 1", ... );
@@ -143,6 +185,14 @@ void Otto::ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames
 			   https://www.youtube.com/watch?v=ohYQe5kzZg8 and ported it into C++ */
 			if (!mOnOffBits.all() || mInvertBits.any()){
 				/* enters the if only if at least one button is either red or grey */
+
+				/* This avoids noise when the plug-in is chained to an analog input audio. 
+				   Values slightly different from 0 will be amplified by the bit manipulation 
+				   and result in noise.
+				 */
+				if (out < 0.01 && out > -0.01){
+					out = 0.0;
+				}
 
 				int signIn = sgn(out);
 
@@ -228,6 +278,3 @@ void Otto::OnParamChange(int paramIdx)
 	}
 }
 
-double Otto::mix(double dry, double wet) const {
-		return dry * mDry + wet * mWet;
-}

@@ -3,8 +3,8 @@
 
 #include "IPlug_include_in_plug_hdr.h"
 
-
 #include <bitset>
+
 
 class Otto : public IPlug
 {
@@ -20,7 +20,10 @@ public:
 
 	void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
 
-	double mix(double dry, double wet) const;
+	inline double mix(double dry, double wet) const {
+		return dry * mDry + wet * mWet;
+	}
+
 private:
 
 	/* bit crusher */
