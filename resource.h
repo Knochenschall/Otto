@@ -21,9 +21,9 @@
 
 // http://service.steinberg.de/databases/plugin.nsf/plugIn?openForm
 // 4 chars, single quotes. At least one capital letter
-#define PLUG_UNIQUE_ID 'Iptx'
+#define PLUG_UNIQUE_ID 'duw0'
 // make sure this is not the same as BUNDLE_MFR
-#define PLUG_MFR_ID 'Acme'
+#define PLUG_MFR_ID 'None'
 
 // ProTools stuff
 #if (defined(AAX_API) || defined(RTAS_API)) && !defined(_PIDS_)
